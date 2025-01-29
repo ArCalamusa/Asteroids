@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.3/lib/p5.min.js"></script>
+    <title>Gioco Meteorite</title>
+
+</head>
+
+<body>
+    <script>
+        let meteorite = {
+            x: 100,
+            y: 0,
+            velocita: 7,
+            direzione: 1,
+        }
+
+        let punteggio;
+        let status;
+
+        function setup() {
+            createCanvas(400, 400);
+            initNuovoMeteorite();
+            punteggio = 0;
+            status = 0;
+        }
+
+        function draw() {
+            background(100);
+
+            if (status == 0) {
+                meteorite.y += meteorite.velocita;
+                //inclina traiettoria
+                meteorite.x += meteorite.direzione * meteorite.velocita / 10;
+                ellipse(meteorite.x, meteorite.y, 10, 10);
+                rect(mouseX, 350, 50, 50, 0);
+
+
+
+                if (meteorite.y > 350) {
+                    if (meteorite.x >= mouseX && (meteorite.x <= mouseX + 50)) {
+                        //intercetto il meteorite ed incremento il punteggio
+                        punteggio++;
+                        //crea nuovo meteorite
+                        initNuovoMeteorite();
+                    }
+                }
+                if (meteorite.y > 400) {
+                    status = 1;
+                }
+            }
+            if (status == 1) {
+                textSize(25);
+                text("Game Over! Punteggio: " + punteggio, 10, 30);
+            }
+        }
+
+
+        function initNuovoMeteorite() {
+            meteorite.x = randomInteger(50, 350);
+            meteorite.y = 0;
+            if (punteggio != 0 && punteggio % 5 == 0) {
+                meteorite.velocita++;
+            }
+            meteorite.direzione = ((randomInteger(0, 1) == 0) ? -1 : 1)
+        }
+
+        //numero casuale
+        function randomInteger(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+    </script>
+
+
+</body>
+
+</html>
